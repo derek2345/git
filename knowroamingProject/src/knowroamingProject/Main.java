@@ -169,186 +169,57 @@ public class Main {
 				}
 			}
 		}
-		
-		String useSimpleDate = "";
-		boolean useSimpleDateFlag = false;
-		if (!checkText(state, State.EXIT)) {
-			useSimpleDate = getConsoleMessage(consoleSet, "Would you like to use simple date format"
-				+ " (yyyy-mm-dd)? (y/n)");
-		}
-		if (checkText(useSimpleDate, "y") || checkText(useSimpleDate, "yes")) useSimpleDateFlag = true;
-		if (useSimpleDateFlag) {
-			String startDate = "";
-			boolean validStartDate = false;
-			while (!checkText(state, State.EXIT) && !validStartDate) {
-				startDate = getConsoleMessage(consoleSet, "Please enter your start date(yyyy-mm-dd): ");			
-				if (startDate.matches(regexFullDate)) {
-					validStartDate = true;
-					String endDate = "";
-					boolean validEndDate = false;
-					while (!checkText(state, State.EXIT) && !validEndDate) {
-						endDate = getConsoleMessage(consoleSet, "Please enter your end date(yyyy-mm-dd): ");
-						boolean endDateAfterStartValid = checkDates(startDate, endDate);
-						if (endDate.matches(regexFullDate) && endDateAfterStartValid) {
-							validEndDate = true;
-						} else {
-							if (!endDateAfterStartValid) {
-								retry = getConsoleMessage(consoleSet, "End date cannot be before start date, would you like to retry? (y/n)");
-							} else {
-								retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-							}
-							if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-								state = State.EXIT;
-							}
-						}
-					}
-					String usageType = "";
-					boolean validUsage = false;
-					while (!checkText(state, State.EXIT) && !validUsage) {
-						usageType = getConsoleMessage(consoleSet, "Please enter your usage"
-								+ " type('all', 'data', 'voice, 'sms'): ");
-						usageType = usageType.toLowerCase();
-						if (checkText(usageType, UsageType.ALL)
-							|| checkText(usageType, UsageType.DATA)
-							|| checkText(usageType, UsageType.VOICE)
-							|| checkText(usageType, UsageType.SMS)) {
-							validUsage = true;
+		String startDate = "";
+		boolean validStartDate = false;
+		while (!checkText(state, State.EXIT) && !validStartDate) {
+			startDate = getConsoleMessage(consoleSet, "Please enter your start date(yyyy-mm-dd): ");			
+			if (startDate.matches(regexFullDate)) {
+				validStartDate = true;
+				String endDate = "";
+				boolean validEndDate = false;
+				while (!checkText(state, State.EXIT) && !validEndDate) {
+					endDate = getConsoleMessage(consoleSet, "Please enter your end date(yyyy-mm-dd): ");
+					boolean endDateAfterStartValid = checkDates(startDate, endDate);
+					if (endDate.matches(regexFullDate) && endDateAfterStartValid) {
+						validEndDate = true;
+					} else {
+						if (!endDateAfterStartValid) {
+							retry = getConsoleMessage(consoleSet, "End date cannot be before start date, would you like to retry? (y/n)");
 						} else {
 							retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-							if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-								state = State.EXIT;
-							}
+						}
+						if (!checkText(retry, "y") && !checkText(retry, "yes")) {
+							state = State.EXIT;
 						}
 					}
-					if (!checkText(state, State.EXIT) && validUserId && validStartDate && validEndDate && validUsage) {
-						dao.readFromUserDataTableBetweenDates(userId, startDate, endDate, usageType);
-						state = State.EXIT;
-					}
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
+				}
+				String usageType = "";
+				boolean validUsage = false;
+				while (!checkText(state, State.EXIT) && !validUsage) {
+					usageType = getConsoleMessage(consoleSet, "Please enter your usage"
+							+ " type('all', 'data', 'voice, 'sms'): ");
+					usageType = usageType.toLowerCase();
+					if (checkText(usageType, UsageType.ALL)
+						|| checkText(usageType, UsageType.DATA)
+						|| checkText(usageType, UsageType.VOICE)
+						|| checkText(usageType, UsageType.SMS)) {
+						validUsage = true;
+					} else {
+						retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
+						if (!checkText(retry, "y") && !checkText(retry, "yes")) {
+							state = State.EXIT;
+						}
 					}
 				}
-			}
-		} else {
-			String startDay = "";
-			boolean validStartDay = false;
-			while (!checkText(state, State.EXIT) && !validStartDay) {
-				startDay = getConsoleMessage(consoleSet, "Please enter your usage start day of the month(ie. "
-						+ "1, 2, ..., 31): ");
-				if (startDay.matches(regexNumber) && Float.valueOf(startDay) >= 1 && Float.valueOf(startDay) <= 31) {
-					validStartDay = true;
-					if (startDay.length() == 1){
-						startDay = "0"+startDay;
-					}
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
+				if (!checkText(state, State.EXIT) && validUserId && validStartDate && validEndDate && validUsage) {
+					dao.readFromUserDataTableBetweenDates(userId, startDate, endDate, usageType);
+					state = State.EXIT;
 				}
-			}
-			String startMonth, startMonthNum = "";
-			boolean validStartMonth = false;
-			while (!checkText(state, State.EXIT) && !validStartMonth) {
-				startMonth = getConsoleMessage(consoleSet, "Please enter your usage start month(ie. Jan, January): ");
-				startMonthNum = getMonthNumber(startMonth);
-				if (startMonthNum.matches(regexNumber) && !checkText(startMonthNum, State.ERROR) 
-						&& !checkText(startMonthNum, "")) {
-					validStartMonth = true;
+			} else {
+				retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
+				if (!checkText(retry, "y") && !checkText(retry, "yes")) {
+					state = State.EXIT;
 				}
-				if (!validStartMonth) {
-					startMonthNum = "";
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			String startYear = "";
-			boolean validStartYear = false;
-			while (!checkText(state, State.EXIT) && !validStartYear) {
-				startYear = getConsoleMessage(consoleSet, "Please enter your usage start year(ie. 2015, 2016): ");			
-				if (startYear.length() == 4 && startYear.matches(regexNumber)) {
-					validStartYear = true;
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			String endDay = "";
-			boolean validEndDay = false;
-			while (!checkText(state, State.EXIT) && !validEndDay) {
-				endDay = getConsoleMessage(consoleSet, "Please enter your usage end day of the month(ie. "
-						+ "1, 2, ..., 31): ");
-				if (endDay.matches(regexNumber) && Float.valueOf(endDay) >= 1 && Float.valueOf(endDay) <= 31) {
-					validEndDay = true;
-					if (endDay.length() == 1){
-						endDay = "0"+endDay;
-					}
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			String endMonth, endMonthNum = "";
-			boolean validEndMonth = false;
-			while (!checkText(state, State.EXIT) && !validEndMonth) {
-				endMonth = getConsoleMessage(consoleSet, "Please enter your usage end month(ie. Jan, January): ");
-				endMonthNum = getMonthNumber(endMonth);
-				if (endMonthNum.matches(regexNumber) && !checkText(endMonthNum, State.ERROR) 
-						&& !checkText(endMonthNum, "")) {
-					validEndMonth = true;
-				}
-				if (!validEndMonth) {
-					endMonthNum = "";
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			String endYear = "";
-			boolean validEndYear = false;
-			while (!checkText(state, State.EXIT) && !validEndYear) {
-				endYear = getConsoleMessage(consoleSet, "Please enter your usage end year(ie. 2015, 2016): ");			
-				if (endYear.length() == 4 && endYear.matches(regexNumber)) {
-					validEndYear = true;
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			String usageType = "";
-			boolean validUsage = false;
-			while (!checkText(state, State.EXIT) && !validUsage) {
-				usageType = getConsoleMessage(consoleSet, "Please enter your usage"
-						+ " type('all', 'data', 'voice, 'sms'): ");
-				usageType = usageType.toLowerCase();
-				if (checkText(usageType, UsageType.ALL)
-					|| checkText(usageType, UsageType.DATA)
-					|| checkText(usageType, UsageType.VOICE)
-					|| checkText(usageType, UsageType.SMS)) {
-					validUsage = true;
-				} else {
-					retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-					if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-						state = State.EXIT;
-					}
-				}
-			}
-			if (!checkText(state, State.EXIT) && validUserId && validStartDay && validStartMonth && validStartYear 
-					&& validEndDay && validEndMonth && validEndYear && validUsage) {
-				dao.readFromUserDataTableBetweenDates(userId, startYear+"-"+startMonthNum+"-"+startDay
-						, endYear+"-"+endMonthNum+"-"+endDay, usageType);
-				state = State.EXIT;
 			}
 		}
 	}
