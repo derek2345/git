@@ -97,7 +97,6 @@ public class Main {
 						+"Enter [ent] or Retrieve [ret] information?"
 					);
 				}
-
 				boolean exitSwitch = true;
 				switch (state) {
 				case State.ENTER:
