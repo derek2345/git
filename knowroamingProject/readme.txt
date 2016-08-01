@@ -13,6 +13,7 @@ mysql column mismatching.
 In order to run this project it must be able to connect to a mysql database: 
  - The user will be prompted whether they would like to connect to a local or a remote database. 
  - The user will either be asked for a port number or remote url.
+ - The user will be asked for a database name.
  - The user will be asked for an ssl key, this is not required and will be assumed "false" if left blank.
  - The user will be asked for a username.
  - The user will be asked for a password.
