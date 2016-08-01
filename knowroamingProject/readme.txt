@@ -2,8 +2,6 @@
 # Know Roaming
 
 
-author: Derek Galbraith
-
 The task was completed as a Java Application using MySql and the jdbc driver. A local or a remote MySql 
 database and the jdbc jar file / driver are required to run this project. A link to download the jdbc file
 is available in the email also submitted with this project.
@@ -24,3 +22,5 @@ In order to run this project it must be able to connect to a MySql database:
  When not entering data or responding to a (y/n) question; the "exit" command should be available.
  
  Some debugging code has been left in but commented out.
+ 
+ author: Derek Galbraith
