@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.*;
 import java.util.Random;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class Main {
 	static class State {
@@ -175,19 +178,28 @@ public class Main {
 		}
 		if (checkText(useSimpleDate, "y") || checkText(useSimpleDate, "yes")) useSimpleDateFlag = true;
 		if (useSimpleDateFlag) {
-			String startDate = "", endDate = "";
-			boolean validStartDate = false, validEndDate = false;
-			while (!checkText(state, State.EXIT) && !validStartDate && !validEndDate) {
+			String startDate = "";
+			boolean validStartDate = false;
+			while (!checkText(state, State.EXIT) && !validStartDate) {
 				startDate = getConsoleMessage(consoleSet, "Please enter your start date(yyyy-mm-dd): ");			
 				if (startDate.matches(regexFullDate)) {
 					validStartDate = true;
-					endDate = getConsoleMessage(consoleSet, "Please enter your end date(yyyy-mm-dd): ");			
-					if (endDate.matches(regexFullDate)) {
-						validEndDate = true;
-					} else {
-						retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
-						if (!checkText(retry, "y") && !checkText(retry, "yes")) {
-							state = State.EXIT;
+					String endDate = "";
+					boolean validEndDate = false;
+					while (!checkText(state, State.EXIT) && !validEndDate) {
+						endDate = getConsoleMessage(consoleSet, "Please enter your end date(yyyy-mm-dd): ");
+						boolean endDateAfterStartValid = checkDates(startDate, endDate);
+						if (endDate.matches(regexFullDate) && endDateAfterStartValid) {
+							validEndDate = true;
+						} else {
+							if (!endDateAfterStartValid) {
+								retry = getConsoleMessage(consoleSet, "End date cannot be before start date, would you like to retry? (y/n)");
+							} else {
+								retry = getConsoleMessage(consoleSet, "Invalid input, would you like to retry? (y/n)");
+							}
+							if (!checkText(retry, "y") && !checkText(retry, "yes")) {
+								state = State.EXIT;
+							}
 						}
 					}
 					String usageType = "";
@@ -341,6 +353,11 @@ public class Main {
 		}
 	}
 	
+	static boolean checkDates(String startDate, String endDate) throws Exception {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		return !(sdf.parse(startDate).compareTo(sdf.parse(endDate)) > 0);
+	}
+
 	/*
 	 * Enter Information Functions
 	 */
@@ -519,7 +536,11 @@ public class Main {
 				dao.writeToUserDataTable(userId, usageType, year+"-"+monthNum+"-"+day);
 			}
 		}
-	}	
+	}
+	
+	/*
+	 * Data Access Object
+	 */
 
 	static class MySQLAccess {
 		private Connection connect = null;
