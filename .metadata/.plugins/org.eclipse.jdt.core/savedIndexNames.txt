@@ -1,0 +1,2 @@
+INDEX VERSION 1.129+C:\Users\Derek\elk-master\git\.metadata\.plugins\org.eclipse.jdt.core
+1921666174.index
