@@ -8,6 +8,10 @@ The task was completed as a Java Application using MySql and the jdbc driver. A 
 database and the jdbc jar file / driver are required to run this project. A link to download the jdbc file
 is available in the email also submitted with this project.
 
+This program will attempt to create tables `users` and `user_data` if they do not already exist. The user
+will need to delete these tables from the database before running the program to avoid running into 
+MySql column mismatching.
+
 In order to run this project it must be able to connect to a MySql database: 
  - The user will be prompted whether they would like to connect to a local or a remote database. 
  - The user will either be asked for a port number or remote url.
